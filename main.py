@@ -1,5 +1,4 @@
 import sqlite3
-
 import PyPDF2
 import os
 
@@ -118,12 +117,9 @@ def get_all_corretagens(text):
             'total': f'{total}'
         }
         text = sub_str
-        # print(x)
-        # print(text)
         result_list.append(x)
 
     return result_list
-    # print(tipo_op, stock, qtd, value, total)
 
 
 def save_on_db(tickers, date, tax_transaction, emolument, emolument_dc, corretagem, corretagem_dc):
@@ -141,7 +137,7 @@ def save_on_db(tickers, date, tax_transaction, emolument, emolument_dc, corretag
         conn.commit()
 
 
-def read_page(page, is_first, is_last):
+def read_page(page):
     text = page.extractText()
     result = get_all_corretagens(text)
     return result
@@ -168,8 +164,8 @@ def read_pdf(file_name):
         page = pdf_reader.getPage(i)
         result = read_page(page, i == 0, i == num_pages - 1)
         if result is not None:
-            #save_on_db(result, date, tax_transaction, emolument, emolument_dc, corretagem, corretagem_dc)
-            print(result, date, tax_transaction, emolument, emolument_dc, corretagem, corretagem_dc)
+            save_on_db(result, date, tax_transaction, emolument, emolument_dc, corretagem, corretagem_dc)
+            # print(result, date, tax_transaction, emolument, emolument_dc, corretagem, corretagem_dc)
 
     pdf_file.close()
 
@@ -181,6 +177,6 @@ def main(path):
 
 
 if __name__ == '__main__':
-    dir_path = os.path.dirname(os.path.realpath(r"F:\Dev\Python\readNuInvestStatements\docs\tmp\tmp"))
+    dir_path = os.path.dirname(os.path.realpath(r"F:\Dev\Python\readNuInvestStatements\docs"))
     print('dir: ', dir_path)
     main(path=dir_path)
