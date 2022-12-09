@@ -162,7 +162,7 @@ def read_pdf(file_name):
 
     for i in range(num_pages):
         page = pdf_reader.getPage(i)
-        result = read_page(page, i == 0, i == num_pages - 1)
+        result = read_page(page)
         if result is not None:
             save_on_db(result, date, tax_transaction, emolument, emolument_dc, corretagem, corretagem_dc)
             # print(result, date, tax_transaction, emolument, emolument_dc, corretagem, corretagem_dc)
