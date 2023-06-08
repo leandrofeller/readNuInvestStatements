@@ -122,7 +122,7 @@ def get_all_corretagens(text):
     return result_list
 
 
-def save_on_db(tickers, date, tax_transaction, emolument, emolument_dc, corretagem, corretagem_dc):
+def save_on_db(tickers, date_stm, tax_transaction, emolument, emolument_dc, corretagem, corretagem_dc):
     conn = sqlite3.connect('database.db')
     curs = conn.cursor()
     for i in range(0, len(tickers)):
@@ -131,8 +131,9 @@ def save_on_db(tickers, date, tax_transaction, emolument, emolument_dc, corretag
                      'ticker, operation, qtd, value, total) '
                      'values '
                      '(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
-                     (date, tax_transaction, emolument, emolument_dc, corretagem, corretagem_dc,
-                      tickers[i]['ticker'], tickers[i]['tipo_op'], tickers[i]['qtd'], tickers[i]['value'], tickers[i]['total'])
+                     (date_stm, tax_transaction, emolument, emolument_dc, corretagem, corretagem_dc,
+                      tickers[i]['ticker'], tickers[i]['tipo_op'], tickers[i]['qtd'], tickers[i]['value'],
+                      tickers[i]['total'])
                      )
         conn.commit()
 
@@ -150,7 +151,7 @@ def read_pdf(file_name):
 
     page = pdf_reader.getPage(0)
     text = page.extractText()
-    date = get_date(text)
+    date_stm = get_date(text)
 
     page = pdf_reader.getPage(pdf_reader.numPages - 1)
     text = page.extractText()
@@ -164,7 +165,7 @@ def read_pdf(file_name):
         page = pdf_reader.getPage(i)
         result = read_page(page)
         if result is not None:
-            save_on_db(result, date, tax_transaction, emolument, emolument_dc, corretagem, corretagem_dc)
+            save_on_db(result, date_stm, tax_transaction, emolument, emolument_dc, corretagem, corretagem_dc)
             # print(result, date, tax_transaction, emolument, emolument_dc, corretagem, corretagem_dc)
 
     pdf_file.close()
@@ -173,10 +174,11 @@ def read_pdf(file_name):
 def main(path):
     files = get_files(path=path)
     for i in range(len(files)):
-       read_pdf(file_name=files[i])
+        read_pdf(file_name=files[i])
 
 
 if __name__ == '__main__':
     dir_path = os.path.dirname(os.path.realpath(r"F:\Dev\Python\readNuInvestStatements\docs"))
-    print('dir: ', dir_path)
+    # print('dir: ', dir_path)
+    # dir_path = os.path.dirname(os.path.realpath(r'F:\Dev\Python\readNuInvestStatements\docs\tmp\tmp'))
     main(path=dir_path)
